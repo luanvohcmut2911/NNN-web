@@ -46,6 +46,7 @@ export const updateDashboard = async(collectionName, data) =>{
     const docSnap = await getDoc(docRef);
     const currentData = docSnap.data(); //data before update
     await updateDoc(docRef, {
+      checkinDays: [...currentData, ...data.checkinDays],
       currentStreak: data.failed ? 0 : currentData.currentStreak + 1,
       nnnDay: data.failed ? currentData.nnnDay: currentData.nnnDay +1
     })

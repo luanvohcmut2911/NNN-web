@@ -1,8 +1,10 @@
 import Login from './Page/Login'
 import FormNNN from './Page/FormNNN';
+import Default from './Page/Default';
 import Stat from './Page/Stat';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthProvider from './context/AuthProvider';
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
             <Route path='/' element={<Login />}></Route>
             <Route path='/daily-survey' element={<FormNNN />}></Route>
             <Route path='/stat' element={<Stat />}></Route>
+            <Route path='/*' element={<Default />}></Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
