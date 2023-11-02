@@ -5,7 +5,11 @@ import {
   signInWithPopup,
   getAdditionalUserInfo
 } from "firebase/auth";
+import { AuthContext } from '../context/AuthProvider';
 import { auth } from '../firebase/config';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUserIDFirestore } from '../firebase/utils';
 
 const CSSProps = {
   backgroundCSS:{
@@ -41,33 +45,23 @@ const CSSProps = {
 const googleProvider = new GoogleAuthProvider();
 
 const Login = () => {
+  const {setUser} = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleGoogleLogin = async (provider) => {
     signInWithPopup(auth, provider).then((result)=>{
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
       const user = result.user;
       const detail = getAdditionalUserInfo(result);
-      console.log(token);
-      const {email, photoURL, uid} = user;
-      // setUser({
-      //   email: email,
-      //   photoURL: photoURL,
-      //   uid: uid
-      // })
-      // if(detail.isNewUser){
-      //   navigate('/user-info');
-      // }
-      // else{ // account existed
-      //   getAccount('users', {
-      //     fieldName: 'uid',
-      //     operator: '==',
-      //     compareValue: uid
-      //   }).then((data)=>{
-      //     setProfileData(data[0]);
-      //     localStorage.setItem('data', JSON.stringify(data[0]));
-      //     console.log(data[0]);
-      //   })
-      // }
+      if(detail.isNewUser){
+        setUser({ user, isNewUser: detail.isNewUser, docID: null });
+        navigate('/daily-survey');
+      }
+      else{
+        getUserIDFirestore('users',user.uid).then((res)=>{
+          console.log({ user, isNewUser: detail.isNewUser, docID: res[0] })
+          setUser({ user, isNewUser: detail.isNewUser, docID: res[0] });
+          navigate('/daily-survey');
+        })
+      }
     })
     .catch((err)=>{
       console.log(err);
@@ -88,7 +82,6 @@ const Login = () => {
           style={CSSProps.formCSS}
           layout="vertical"
           initialValues={{ remember: true }}
-          // onFinish={onFinish}
       >
         <Typography.Title level={2}> WELCOME TO NNN CHECK IN </Typography.Title>
         <Form.Item>
