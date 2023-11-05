@@ -57,7 +57,6 @@ const Login = () => {
       }
       else{
         getUserIDFirestore('users',user.uid).then((res)=>{
-          console.log({ user, isNewUser: detail.isNewUser, docID: res[0] })
           setUser({ user, isNewUser: detail.isNewUser, docID: res[0] });
           navigate('/daily-survey');
         })
@@ -69,7 +68,6 @@ const Login = () => {
   };
   const [api, contextHolder] = notification.useNotification();
   const handleNotification = ()=>{
-    console.log("click")
     api.info({
       message: "This feature is implementing"
     })

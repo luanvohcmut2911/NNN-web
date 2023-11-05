@@ -23,8 +23,14 @@ export const getDashboard = async (collectionName) => {
   return (arr);
 }
 
+const isTheSameDay = (date, otherDate)=>{
+  // console.log(date.toDateString(), otherDate.toDateString());
+  return date.toDateString() === otherDate.toDateString();
+}
+
+
 export const updateDashboard = async(collectionName, data) =>{
-  console.log(data);
+  // console.log(data);
   if(data.isNewUser){
     const docRef = await addDoc(collection(db, collectionName), {
       // checkinDays: ...data.checkinDays
@@ -45,11 +51,21 @@ export const updateDashboard = async(collectionName, data) =>{
     const docRef = doc(db, collectionName, data.docID);
     const docSnap = await getDoc(docRef);
     const currentData = docSnap.data(); //data before update
-    await updateDoc(docRef, {
-      checkinDays: currentData.checkinDays.concat(data.checkinDays),
-      currentStreak: data.failed ? 0 : currentData.currentStreak + 1,
-      nnnDay: data.failed ? currentData.nnnDay: currentData.nnnDay +1
+    const checkValidRegistration = currentData.checkinDays.every((iter)=>{
+      return isTheSameDay(iter.toDate(), data.checkinDays[0]);
     })
+    if(checkValidRegistration){
+      await updateDoc(docRef, {
+        checkinDays: currentData.checkinDays.concat(data.checkinDays),
+        currentStreak: data.failed ? 0 : currentData.currentStreak + 1,
+        nnnDay: data.failed ? currentData.nnnDay: currentData.nnnDay +1
+      })
+      // console.log("Ready to add");
+    }
+    else{
+      // console.log("Today is registered");
+      return false;
+    }
   }
 }
 

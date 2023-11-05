@@ -1,5 +1,5 @@
 import backgroundImage from '../asset/background.jpg';
-import { Typography, Avatar, List } from 'antd';
+import { Typography, Avatar, List, Progress } from 'antd';
 import { getDashboard } from '../firebase/utils';
 import { useState, useEffect } from 'react';
 
@@ -24,39 +24,10 @@ const CSSProps = {
     borderRadius: "24px",
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     padding:"1rem",
     overflow: 'auto'
   }
 }
-
-// const data = [
-//   {
-//     title: 'Ant Design Title 1',
-//   },
-//   {
-//     title: 'Ant Design Title 2',
-//   },
-//   {
-//     title: 'Ant Design Title 3',
-//   },
-//   {
-//     title: 'Ant Design Title 4',
-//   },
-//   {
-//     title: 'Ant Design Title 5',
-//   },
-//   {
-//     title: 'Ant Design Title 6',
-//   },
-//   {
-//     title: 'Ant Design Title 7',
-//   },
-//   {
-//     title: 'Ant Design Title 8',
-//   },
-// ]
 
 const Stat = () => {
   const [dashboard, setDashboard] = useState([]);
@@ -74,6 +45,29 @@ const Stat = () => {
   //     message: "This feature is implementing"
   //   })
   // }
+  const checktuvi = (nnnDay)=>{
+    if(nnnDay < 5){
+      return "Luyện Khí Kì";
+    }
+    else if(nnnDay < 10){
+      return "Trúc Cơ kì";
+    }
+    else if(nnnDay < 15){
+      return "Kim Đan kì";
+    }
+    else if(nnnDay < 20){
+      return "Nguyên Anh kì";
+    }
+    else if(nnnDay < 25){
+      return "Hóa Thần kì";
+    }
+    else if(nnnDay < 30){
+      return "Độ Kiếp phi thằng tiên giới";
+    }
+    else {
+      return "Thành tiên"
+    }
+  }
   return (
     <div style={CSSProps.backgroundCSS}>
       {/* {contextHolder} */}
@@ -90,7 +84,13 @@ const Stat = () => {
                 key = {item.id}
                 avatar={<Avatar src={item?.data?.photoURL} />}
                 title={<Typography.Text>{item?.data?.name}</Typography.Text>}
-                description={<Typography.Text>Số ngày tích lũy: {item?.data?.nnnDay}, chuỗi hiện tại: {item?.data?.currentStreak}</Typography.Text>}
+                description={
+                  <div>
+                    <Typography.Text>Số ngày tích lũy: {item?.data?.nnnDay}, chuỗi hiện tại: {item?.data?.currentStreak}</Typography.Text>
+                    <Progress percent={Math.round(item?.data?.nnnDay / 30 * 100)} status="active"></Progress>
+                    <Typography.Text>Tu vi hiện tại: {checktuvi(item?.data?.nnnDay)}</Typography.Text> 
+                  </div>
+                }
               />
             </List.Item>
           )}

@@ -68,8 +68,16 @@ const Login = () => {
           checkinDays: [currentDate],
           isNewUser: user?.isNewUser,
           failed: option === 1 ? 1 : 0
-        }).then(()=>{
-           navigate('/stat');
+        }).then((res)=>{
+          //  navigate('/stat');
+          if(!res){
+            api.warning({
+              message: "Đạo hữu đã dẫn nhập canh khí hôm nay rồi"
+            })
+          }
+          else{
+            navigate('/stat');
+          }
         })
         
       }}>Chắc chắn rồi</Button>
@@ -99,7 +107,10 @@ const Login = () => {
           <Radio.Button value={2}>Vẫn đang trong chuỗi</Radio.Button>
         </Radio.Group>
         <Form.Item style={CSSProps.buttonCSS}>
-          <Button type="primary" block onClick = {handleSubmit} >Submit</Button>
+          <Button type="primary" block onClick = {handleSubmit} >Điểm danh</Button>
+          <Button type="default" block onClick = {()=>{
+            navigate('/stat');
+          }} style={{marginTop: '1rem'}} >Check tu vi hiện tại ở nhân giới</Button>
         </Form.Item>
       </Form>
     </div>
