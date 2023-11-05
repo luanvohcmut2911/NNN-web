@@ -54,7 +54,7 @@ export const updateDashboard = async(collectionName, data) =>{
     const checkValidRegistration = currentData.checkinDays.every((iter)=>{
       return isTheSameDay(iter.toDate(), data.checkinDays[0]);
     })
-    if(checkValidRegistration){
+    if(!checkValidRegistration){
       await updateDoc(docRef, {
         checkinDays: currentData.checkinDays.concat(data.checkinDays),
         currentStreak: data.failed ? 0 : currentData.currentStreak + 1,
