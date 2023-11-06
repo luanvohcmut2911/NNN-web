@@ -43,8 +43,10 @@ export const updateDashboard = async(collectionName, data) =>{
     })
     try {
       console.log("Data is uploaded with ID: ", docRef.id);
+      return true;
     } catch (err) {
       console.log(err);
+      // return false;
     }
   }
   else{
