@@ -62,6 +62,7 @@ export const updateDashboard = async(collectionName, data) =>{
           nnnDay: data.failed ? currentData.nnnDay: currentData.nnnDay +1
         })
         // console.log("Ready to add");
+        return true;
       }
       else{
         // console.log("Today is registered");
